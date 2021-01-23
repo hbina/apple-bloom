@@ -24,41 +24,40 @@ impl Default for Scheme {
 pub struct Spec {
     /// The Swagger version of this document.
     pub swagger: String,
-    pub info: Info,
+    // pub info: Info,
     /// The host (name or ip) of the API. Example: 'swagger.io'
     /// ^[^{}/ :\\\\]+(?::\\d+)?$
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub host: Option<String>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub host: Option<String>,
     /// The base path to the API. Example: '/api'.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(rename = "basePath")]
-    pub base_path: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub schemes: Option<Vec<Scheme>>,
+    // #[serde(rename = "basePath", skip_serializing_if = "Option::is_none")]
+    // pub base_path: Option<String>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub schemes: Option<Vec<Scheme>>,
     /// A list of MIME types accepted by the API.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub consumes: Option<Vec<String>>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub consumes: Option<Vec<String>>,
     /// A list of MIME types the API can produce.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub produces: Option<Vec<String>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tags: Option<Vec<Tag>>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub produces: Option<Vec<String>>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub tags: Option<Vec<Tag>>,
     /// Relative paths to the individual endpoints. They must be relative
     /// to the 'basePath'.
-    pub paths: BTreeMap<String, PathItem>,
+    // pub paths: BTreeMap<String, PathItem>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub definitions: Option<BTreeMap<String, Schema>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<BTreeMap<String, Parameter>>,
-    /// mappings to http response codes or "default"
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub responses: Option<BTreeMap<String, Response>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub security_definitions: Option<BTreeMap<String, Security>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub security: Option<Vec<BTreeMap<String, Vec<String>>>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub external_docs: Option<Vec<ExternalDoc>>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub parameters: Option<BTreeMap<String, Parameter>>,
+    // Mappings to http response codes or "default"
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub responses: Option<BTreeMap<String, Response>>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub security_definitions: Option<BTreeMap<String, Security>>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub security: Option<Vec<BTreeMap<String, Vec<String>>>>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub external_docs: Option<ExternalDoc>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
@@ -85,8 +84,7 @@ pub struct ExternalDoc {
 #[serde(rename_all = "lowercase")]
 pub struct Info {
     /// A unique and precise title of the API.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub title: Option<String>,
+    pub title: String,
     /// A semantic version number of the API.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
@@ -169,6 +167,8 @@ pub struct Operation {
     pub parameters: Option<Vec<ParameterOrRef>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub security: Option<Vec<SecurityRequirement>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub deprecated: Option<bool>,
 }
 
 /// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityRequirementObject
@@ -335,7 +335,7 @@ pub struct Schema {
     // composition
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "allOf")]
-    pub all_of: Option<Vec<Box<Schema>>>,
+    pub all_of: Option<Vec<Schema>>,
     // TODO: we need a validation step that we only collect x-* properties here.
     #[serde(flatten)]
     pub other: BTreeMap<String, serde_json::Value>,

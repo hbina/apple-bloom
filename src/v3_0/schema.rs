@@ -1,14 +1,15 @@
 //! Schema specification for [OpenAPI 3.0.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md)
 
 use crate::v3_0::extension::Extensions;
-use serde::{Deserialize, Serialize};
-use std::collections::{BTreeMap, HashMap};
-use url::Url;
-
 use crate::{
-    v3_0::components::{BooleanObjectOrReference, Components, ObjectOrReference},
+    v3_0::{components::Components, SchemaObject},
     Error, Result, MINIMUM_OPENAPI30_VERSION,
 };
+use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
+use url::Url;
+
+use super::ObjectOrReference;
 
 impl Spec {
     pub fn validate_version(&self) -> Result<semver::Version> {
@@ -24,7 +25,7 @@ impl Spec {
 }
 
 /// top level document
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Spec {
     /// This string MUST be the [semantic version number](https://semver.org/spec/v2.0.0.html)
     /// of the
@@ -45,20 +46,19 @@ pub struct Spec {
     /// [url](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#serverUrl)
     /// value of `/`.
     // FIXME: Provide a default value as specified in documentation instead of `None`.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub servers: Option<Vec<Server>>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub servers: Option<Vec<Server>>,
 
     /// Holds the relative paths to the individual endpoints and their operations. The path is
     /// appended to the URL from the
     /// [`Server Object`](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#serverObject)
     /// in order to construct the full URL. The Paths MAY be empty, due to
     /// [ACL constraints](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#securityFiltering).
-    pub paths: BTreeMap<String, PathItem>,
+    // pub paths: BTreeMap<String, PathItem>,
 
     /// An element to hold various schemas for the specification.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub components: Option<Components>,
-
     // FIXME: Implement
     // /// A declaration of which security mechanisms can be used across the API.
     // /// The list of  values includes alternative security requirement objects that can be used.
@@ -66,27 +66,26 @@ pub struct Spec {
     // /// Individual operations can override this definition.
     // #[serde(skip_serializing_if = "Option::is_none")]
     // pub security: Option<SecurityRequirement>,
-    /// A list of tags used by the specification with additional metadata.
-    ///The order of the tags can be used to reflect on their order by the parsing tools.
-    /// Not all tags that are used by the
-    /// [Operation Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#operationObject)
-    /// must be declared. The tags that are not declared MAY be organized randomly or
-    /// based on the tools' logic. Each tag name in the list MUST be unique.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tags: Option<Vec<Tag>>,
-
-    /// Additional external documentation.
-    #[serde(skip_serializing_if = "Option::is_none", rename = "externalDocs")]
-    pub external_docs: Option<ExternalDoc>,
-    #[serde(flatten)]
-    pub extensions: Extensions,
+    // A list of tags used by the specification with additional metadata.
+    // The order of the tags can be used to reflect on their order by the parsing tools.
+    // Not all tags that are used by the
+    // [Operation Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#operationObject)
+    // must be declared. The tags that are not declared MAY be organized randomly or
+    // based on the tools' logic. Each tag name in the list MUST be unique.
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub tags: Option<Vec<Tag>>,
+    // Additional external documentation.
+    // #[serde(skip_serializing_if = "Option::is_none", rename = "externalDocs")]
+    // pub external_docs: Option<ExternalDoc>,
+    // #[serde(flatten)]
+    // pub extensions: Extensions,
 }
 
 /// General information about the API.
 ///
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#infoObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 // #[serde(rename_all = "lowercase")]
 pub struct Info {
     /// The title of the application.
@@ -112,7 +111,7 @@ pub struct Info {
 /// Contact information for the exposed API.
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#contactObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Contact {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -123,14 +122,12 @@ pub struct Contact {
     // TODO: Make sure the email is a valid email
     #[serde(skip_serializing_if = "Option::is_none")]
     pub email: Option<String>,
-    #[serde(flatten)]
-    pub extensions: Extensions,
 }
 
 /// License information for the exposed API.
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#licenseObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct License {
     /// The license name used for the API.
     pub name: String,
@@ -144,7 +141,7 @@ pub struct License {
 /// An object representing a Server.
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#serverObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Server {
     /// A URL to the target host. This URL supports Server Variables and MAY be relative, to
     /// indicate that the host location is relative to the location where the OpenAPI document
@@ -163,7 +160,7 @@ pub struct Server {
 /// An object representing a Server Variable for server URL template substitution.
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#serverVariableObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct ServerVariable {
     /// The default value to use for substitution, and to send, if an alternate value is not
     /// supplied. Unlike the Schema Object's default, this value MUST be provided by the consumer.
@@ -186,7 +183,7 @@ pub struct ServerVariable {
 /// constraints](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#securityFiltering).
 /// The path itself is still exposed to the documentation viewer but they will not know which
 /// operations and parameters are available.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct PathItem {
     /// Allows for an external definition of this path item. The referenced structure MUST be
     /// in the format of a
@@ -253,7 +250,7 @@ pub struct PathItem {
 /// Describes a single API operation on a path.
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#operationObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 // #[serde(rename_all = "lowercase")]
 pub struct Operation {
     /// A list of tags for API documentation control. Tags can be used for logical grouping of
@@ -352,7 +349,7 @@ pub struct Operation {
 /// and [location](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#parameterIn).
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#parameterObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Parameter {
     /// The name of the parameter.
     pub name: String,
@@ -363,7 +360,7 @@ pub struct Parameter {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub required: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub schema: Option<Schema>,
+    pub schema: Option<SchemaObject>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "uniqueItems")]
     pub unique_items: Option<bool>,
@@ -410,173 +407,11 @@ enum ParameterStyle {
     DeepObject,
 }
 
-// FIXME: Verify against OpenAPI 3.0
-/// The Schema Object allows the definition of input and output data types.
-/// These types can be objects, but also primitives and arrays.
-/// This object is an extended subset of the
-/// [JSON Schema Specification Wright Draft 00](http://json-schema.org/).
-/// For more information about the properties, see
-/// [JSON Schema Core](https://tools.ietf.org/html/draft-wright-json-schema-00) and
-/// [JSON Schema Validation](https://tools.ietf.org/html/draft-wright-json-schema-validation-00).
-/// Unless stated otherwise, the property definitions follow the JSON Schema.
-///
-/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#schemaObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
-pub struct Schema {
-    /// [JSON reference](https://tools.ietf.org/html/draft-pbryan-zyp-json-ref-03)
-    /// path to another definition
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(rename = "$ref")]
-    pub ref_path: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(rename = "type")]
-    pub schema_type: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub format: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(rename = "enum")]
-    pub enum_values: Option<Vec<String>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub required: Option<Vec<String>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub items: Option<Box<Schema>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub properties: Option<BTreeMap<String, Schema>>,
-
-    #[serde(skip_serializing_if = "Option::is_none", rename = "readOnly")]
-    pub read_only: Option<bool>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub nullable: Option<bool>,
-
-    /// Value can be boolean or object. Inline or referenced schema MUST be of a
-    /// [Schema Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#schemaObject)
-    /// and not a standard JSON Schema.
-    ///
-    /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#properties>.
-    #[serde(
-        skip_serializing_if = "Option::is_none",
-        rename = "additionalProperties"
-    )]
-    pub additional_properties: Option<BooleanObjectOrReference<Box<Schema>>>,
-
-    /// A free-form property to include an example of an instance for this schema.
-    /// To represent examples that cannot be naturally represented in JSON or YAML,
-    /// a string value can be used to contain the example with escaping where necessary.
-    /// NOTE: According to [spec], _Primitive data types in the OAS are based on the
-    ///       types supported by the JSON Schema Specification Wright Draft 00._
-    ///       This suggest using
-    ///       [`serde_json::Value`](https://docs.serde.rs/serde_json/value/enum.Value.html). [spec][https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#data-types]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub example: Option<serde_json::value::Value>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub title: Option<String>,
-
-    // The following properties are taken directly from the JSON Schema definition and
-    // follow the same specifications:
-    #[serde(skip_serializing_if = "Option::is_none", rename = "multipleOf")]
-    pub multiple_of: Option<u32>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub maximum: Option<i32>,
-
-    #[serde(skip_serializing_if = "Option::is_none", rename = "exclusiveMaximum")]
-    pub exclusive_maximum: Option<bool>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub minimum: Option<i32>,
-
-    #[serde(skip_serializing_if = "Option::is_none", rename = "exclusiveMinimum")]
-    pub exclusive_minimum: Option<bool>,
-
-    #[serde(skip_serializing_if = "Option::is_none", rename = "maxLength")]
-    pub max_length: Option<u32>,
-
-    #[serde(skip_serializing_if = "Option::is_none", rename = "minLength")]
-    pub min_length: Option<u32>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub pattern: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none", rename = "maxItems")]
-    pub max_items: Option<u32>,
-
-    #[serde(skip_serializing_if = "Option::is_none", rename = "minItems")]
-    pub min_items: Option<u32>,
-
-    #[serde(skip_serializing_if = "Option::is_none", rename = "uniqueItems")]
-    pub unique_items: Option<bool>,
-
-    #[serde(skip_serializing_if = "Option::is_none", rename = "maxProperties")]
-    pub max_properties: Option<u32>,
-
-    #[serde(skip_serializing_if = "Option::is_none", rename = "minProperties")]
-    pub min_properties: Option<u32>,
-
-    // The following properties are taken from the JSON Schema definition but their
-    // definitions were adjusted to the OpenAPI Specification.
-    // - type - Value MUST be a string. Multiple types via an array are not supported.
-    // - allOf - Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard JSON Schema.
-    // - oneOf - Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard JSON Schema.
-    // - anyOf - Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard JSON Schema.
-    // - not - Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard JSON Schema.
-    // - items - Value MUST be an object and not an array. Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard JSON Schema. `items` MUST be present if the `type` is `array`.
-    // - properties - Property definitions MUST be a [Schema Object](#schemaObject) and not a standard JSON Schema (inline or referenced).
-    // - additionalProperties - Value can be boolean or object. Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard JSON Schema.
-    // - description - [CommonMark syntax](http://spec.commonmark.org/) MAY be used for rich text representation.
-    // - format - See [Data Type Formats](#dataTypeFormat) for further details. While relying on JSON Schema's defined formats, the OAS offers a few additional predefined formats.
-    // - default - The default value represents what would be assumed by the consumer of the input as the value of the schema if one is not provided. Unlike JSON Schema, the value MUST conform to the defined type for the Schema Object defined at the same level. For example, if `type` is `string`, then `default` can be `"foo"` but cannot be `1`.
-    /// The default value represents what would be assumed by the consumer of the input as the value
-    /// of the schema if one is not provided. Unlike JSON Schema, the value MUST conform to the
-    /// defined type for the Schema Object defined at the same level. For example, if type is
-    /// `string`, then `default` can be `"foo"` but cannot be `1`.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub default: Option<serde_json::Value>,
-
-    /// Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard
-    /// JSON Schema.
-    /// [allOf](https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/#allof)
-    #[serde(rename = "allOf", skip_serializing_if = "Option::is_none")]
-    pub all_of: Option<Vec<ObjectOrReference<Schema>>>,
-
-    /// Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard
-    /// JSON Schema.
-    /// [oneOf](https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/#oneof)
-    #[serde(rename = "oneOf", skip_serializing_if = "Option::is_none")]
-    pub one_of: Option<Vec<ObjectOrReference<Schema>>>,
-
-    /// Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard
-    /// JSON Schema.
-    /// [anyOf](https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/#anyof)
-    #[serde(rename = "anyOf", skip_serializing_if = "Option::is_none")]
-    pub any_of: Option<Vec<ObjectOrReference<Schema>>>,
-
-    /// Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard
-    /// JSON Schema.
-    /// [not](https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/#not)
-    #[serde(rename = "not", skip_serializing_if = "Option::is_none")]
-    pub not: Option<Vec<ObjectOrReference<Schema>>>,
-
-    /// [Specification extensions](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#specificationExtensions)
-    #[serde(flatten)]
-    pub extensions: HashMap<String, String>,
-}
-
 /// Describes a single response from an API Operation, including design-time, static `links`
 /// to operations based on the response.
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#responseObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Response {
     /// A short description of the response.
     /// [CommonMark syntax](http://spec.commonmark.org/) MAY be used for rich text representation.
@@ -614,14 +449,14 @@ pub struct Response {
 ///    `header` (for example, [`style`](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#parameterStyle)).
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#headerObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Header {
     // FIXME: Is the third change properly implemented?
     // FIXME: Merge `ObjectOrReference<Header>::Reference` and `ParameterOrRef::Reference`
     #[serde(skip_serializing_if = "Option::is_none")]
     pub required: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub schema: Option<Schema>,
+    pub schema: Option<SchemaObject>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "uniqueItems")]
     pub unique_items: Option<bool>,
@@ -654,7 +489,7 @@ pub struct Header {
 /// Describes a single request body.
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#requestBodyObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct RequestBody {
     /// A brief description of the request body. This could contain examples of use.
     /// [CommonMark syntax](http://spec.commonmark.org/) MAY be used for rich text representation.
@@ -768,11 +603,11 @@ pub enum Link {
 /// Each Media Type Object provides schema and examples for the media type identified by its key.
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#media-type-object>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct MediaType {
     /// The schema defining the type used for the request body.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub schema: Option<ObjectOrReference<Schema>>,
+    pub schema: Option<ObjectOrReference<SchemaObject>>,
 
     /// Example of the media type.
     #[serde(flatten, skip_serializing_if = "Option::is_none")]
@@ -804,7 +639,7 @@ pub enum MediaTypeExample {
 }
 
 /// A single encoding definition applied to a single schema property.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Encoding {
     /// The Content-Type for encoding a specific property. Default value depends on the
     /// property type: for `string` with `format` being `binary` – `application/octet-stream`;
@@ -852,7 +687,7 @@ pub struct Encoding {
 }
 
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#exampleObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Example {
     /// Short description for the example.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -901,7 +736,7 @@ pub enum SecurityScheme {
         bearer_format: String,
     },
     #[serde(rename = "oauth2")]
-    OAuth2 { flows: Flows },
+    OAuth2 { flows: Box<Flows> },
     #[serde(rename = "openIdConnect")]
     OpenIdConnect {
         #[serde(rename = "openIdConnectUrl")]
@@ -982,7 +817,7 @@ pub struct AuthorizationCodeFlow {
 /// callback operation.
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#callbackObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Callback(
     /// A Path Item Object used to define a callback request and expected responses.
     serde_json::Value, // TODO: Add "Specification Extensions" https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions}
@@ -991,7 +826,7 @@ pub struct Callback(
 // FIXME: Implement
 // /// Allows configuration of the supported OAuth Flows.
 // /// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#oauthFlowsObject
-// #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+// #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 // pub struct OAuthFlows {
 // }
 
@@ -1000,7 +835,7 @@ pub struct Callback(
 /// It is not mandatory to have a Tag Object per tag defined in the Operation Object instances.
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#tagObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Tag {
     /// The name of the tag.
     pub name: String,

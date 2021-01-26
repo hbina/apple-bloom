@@ -2,14 +2,12 @@
 
 use crate::v3_0::extension::Extensions;
 use crate::{
-    v3_0::{components::Components, SchemaObject},
+    v3_0::{components::Components, helper::ObjectOrReference, SchemaObject},
     Error, Result, MINIMUM_OPENAPI30_VERSION,
 };
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use url::Url;
-
-use super::ObjectOrReference;
 
 impl Spec {
     pub fn validate_version(&self) -> Result<semver::Version> {

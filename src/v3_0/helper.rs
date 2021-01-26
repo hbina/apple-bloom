@@ -9,8 +9,8 @@ pub struct Ref {
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(untagged)]
 pub enum ObjectOrReference<T> {
-    Object(T),
     Ref(Ref),
+    Object(T),
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]

@@ -901,7 +901,7 @@ pub enum SecurityScheme {
         bearer_format: String,
     },
     #[serde(rename = "oauth2")]
-    OAuth2 { flows: Flows },
+    OAuth2 { flows: Box<Flows> },
     #[serde(rename = "openIdConnect")]
     OpenIdConnect {
         #[serde(rename = "openIdConnectUrl")]

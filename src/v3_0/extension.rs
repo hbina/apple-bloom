@@ -7,7 +7,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 /// Contains openapi specification extensions
 /// see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions
-#[derive(Debug, Eq, PartialEq, Clone)]
+#[derive(Debug, Default, Eq, PartialEq, Clone)]
 pub struct Extensions(HashMap<String, serde_json::Value>);
 
 impl Extensions {
@@ -23,12 +23,6 @@ impl Extensions {
     /// A reference to all the captured extensions
     pub fn all(&self) -> &HashMap<String, serde_json::Value> {
         &self.0
-    }
-}
-
-impl Default for Extensions {
-    fn default() -> Self {
-        Self(HashMap::new())
     }
 }
 

@@ -2,7 +2,7 @@ use anyhow::Result;
 
 fn main() -> Result<()> {
     if let Some(path) = std::env::args().nth(1) {
-        let spec = openapi::from_path(path)?;
+        let spec = apple_bloom::from_path(path)?;
         /*for (path, op) in spec.paths {
             println!("{}", path);
             println!("{:#?}", op);
@@ -11,7 +11,7 @@ fn main() -> Result<()> {
             println!("{}", name);
             println!("{:#?}", definition);
         }*/
-        println!("{}", openapi::to_json(&spec)?);
+        println!("{}", apple_bloom::to_json(&spec)?);
     }
     Ok(())
 }

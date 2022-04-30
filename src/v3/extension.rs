@@ -74,7 +74,7 @@ mod tests {
     use serde_json::Value;
     use serde_test::{assert_tokens, Token};
 
-    use crate::v3_0::extension::Extensions;
+    use crate::v3::extension::Extensions;
 
     #[test]
     fn test_serde_extensions() {

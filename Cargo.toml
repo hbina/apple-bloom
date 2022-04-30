@@ -1,5 +1,5 @@
 [package]
-name = "openapi"
+name = "apple-bloom"
 version = "0.1.5"
 authors = ["softprops <d.tangren@gmail.com>"]
 description = "Rust bindings for openapi schemas"

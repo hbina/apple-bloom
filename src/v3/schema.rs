@@ -1,12 +1,12 @@
 //! Schema specification for [OpenAPI 3.0.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md)
 
-use crate::v3_0::extension::Extensions;
+use crate::v3::extension::Extensions;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
 use url::Url;
 
 use crate::{
-    v3_0::components::{BooleanObjectOrReference, Components, ObjectOrReference},
+    v3::components::{BooleanObjectOrReference, Components, ObjectOrReference},
     Error, Result, MINIMUM_OPENAPI30_VERSION,
 };
 

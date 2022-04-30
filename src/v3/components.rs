@@ -1,4 +1,4 @@
-use crate::v3_0::{
+use crate::v3::{
     Callback, Example, Extensions, Header, Link, Parameter, RequestBody, Response, Schema,
     SecurityScheme,
 };

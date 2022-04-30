@@ -8,10 +8,10 @@
 //! The hyper client should be configured with tls.
 //!
 //! ```no_run
-//! extern crate openapi;
+//! extern crate apple_bloom;
 //!
 //! fn main() {
-//!   match openapi::from_path("path/to/openapi.yaml") {
+//!   match apple_bloom::from_path("path/to/openapi.yaml") {
 //!     Ok(spec) => println!("spec: {:?}", spec),
 //!     Err(err) => println!("error: {}", err)
 //!   }
@@ -29,7 +29,7 @@ use std::{fs::File, io::Read, path::Path, result::Result as StdResult};
 
 pub mod error;
 pub mod v2;
-pub mod v3_0;
+pub mod v3;
 
 pub use error::Error;
 
@@ -54,7 +54,7 @@ pub enum OpenApi {
     /// [specification](https://github.com/OAI/OpenAPI-Specification/blob/0dd79f6/versions/3.0.1.md)
     /// for more information.
     #[allow(non_camel_case_types)]
-    V3_0(Box<v3_0::Spec>),
+    V3_0(Box<v3::Spec>),
 }
 
 /// deserialize an open api spec from a path
@@ -233,7 +233,7 @@ mod tests {
             let schemas = components.schemas.unwrap();
             let obj_or_ref = schemas.get("PetSpecies");
 
-            if let Some(v3_0::ObjectOrReference::Object(schema)) = obj_or_ref {
+            if let Some(v3::ObjectOrReference::Object(schema)) = obj_or_ref {
                 // there should be 2 schemas in there
                 assert_eq!(schema.one_of.as_ref().unwrap().len(), 2);
             } else {

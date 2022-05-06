@@ -8,11 +8,15 @@ use std::collections::BTreeMap;
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(untagged)]
 pub enum ObjectOrReference<T> {
-    Object(T),
+    // Instead of an object, the object can reference another object.
+    // It looks something like `#/components/schemas/pet` which means
+    // we need to start from the root, get the `components` object,
+    //  then `schemas` and finally `pet` is the object.
     Ref {
         #[serde(rename = "$ref")]
         ref_path: String,
     },
+    Object(T),
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]

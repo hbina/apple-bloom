@@ -1,24 +1,24 @@
 [package]
 name = "apple-bloom"
-version = "0.1.5"
-authors = ["softprops <d.tangren@gmail.com>"]
+version = "0.1.6"
+authors = ["softprops <d.tangren@gmail.com>", "Hanif Bin Ariffin <hanif.ariffin.4326@gmail.com>"]
 description = "Rust bindings for openapi schemas"
 homepage = "https://github.com/hbina/apple-bloom"
 repository = "https://github.com/hbina/apple-bloom"
 keywords = ["openapi", "swagger"]
 license = "MIT"
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 failure = "0.1.8"
-semver = "1.0.7"
-serde = { version = "1.0.136", features = ["derive"] }
-serde_json = "1.0.79"
-serde_yaml = "0.8.23"
-thiserror = "1.0.30"
+semver = "1.0.9"
+serde = { version = "1.0.137", features = ["derive"] }
+serde_json = "1.0.81"
+serde_yaml = "0.8.24"
+thiserror = "1.0.31"
 url = { version = "2.2.2", features = ["serde"] }
 
 [dev-dependencies]
 anyhow = "1.0.57"
 pretty_assertions = "1.2.1"
-serde_test = "1.0.136"
+serde_test = "1.0.137"

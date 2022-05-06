@@ -6,7 +6,7 @@ use serde::ser::SerializeMap;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 /// Contains openapi specification extensions
-/// see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions
+/// see https://github.com/OAI/OpenAPI-Specification/blob/aa91a19c43f8a12c02efa42d64794e396473f3b1/versions/3.0.1.md#specificationExtensions
 #[derive(Debug, Default, Eq, PartialEq, Clone)]
 pub struct Extensions(HashMap<String, serde_json::Value>);
 

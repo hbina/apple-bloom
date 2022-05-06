@@ -5,7 +5,7 @@ use crate::v3::{
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum ObjectOrReference<T> {
     // Instead of an object, the object can reference another object.
@@ -19,7 +19,7 @@ pub enum ObjectOrReference<T> {
     Object(T),
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum BooleanObjectOrReference<T> {
     Boolean(bool),
@@ -35,7 +35,7 @@ pub enum BooleanObjectOrReference<T> {
 /// All objects defined within the components object will have no effect on the API unless
 /// they are explicitly referenced from properties outside the components object.
 ///
-/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#componentsObject>.
+/// See <https://github.com/OAI/OpenAPI-Specification/blob/aa91a19c43f8a12c02efa42d64794e396473f3b1/versions/3.0.1.md#componentsObject>.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
 pub struct Components {
     /// An object to hold reusable Schema Objects.

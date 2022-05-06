@@ -80,7 +80,7 @@ pub struct ExternalDoc {
 
 /// General information about the API.
 ///
-/// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#info-object
+/// https://github.com/OAI/OpenAPI-Specification/blob/aa91a19c43f8a12c02efa42d64794e396473f3b1/versions/2.0.md#info-object
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
 #[serde(rename_all = "lowercase")]
 pub struct Info {
@@ -146,7 +146,7 @@ pub struct PathItem {
     pub parameters: Option<Vec<ParameterOrRef>>,
 }
 
-/// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operation-object
+/// https://github.com/OAI/OpenAPI-Specification/blob/aa91a19c43f8a12c02efa42d64794e396473f3b1/versions/2.0.md#operation-object
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
 #[serde(rename_all = "lowercase")]
 pub struct Operation {
@@ -171,7 +171,7 @@ pub struct Operation {
     pub security: Option<Vec<SecurityRequirement>>,
 }
 
-/// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityRequirementObject
+/// https://github.com/OAI/OpenAPI-Specification/blob/aa91a19c43f8a12c02efa42d64794e396473f3b1/versions/2.0.md#securityRequirementObject
 pub type SecurityRequirement = BTreeMap<String, Vec<String>>;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
@@ -207,7 +207,7 @@ pub struct Response {
 }
 
 // todo: support x-* fields
-/// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameter-object
+/// https://github.com/OAI/OpenAPI-Specification/blob/aa91a19c43f8a12c02efa42d64794e396473f3b1/versions/2.0.md#parameter-object
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(untagged)]
 pub enum ParameterOrRef {

@@ -1,6 +1,6 @@
 [package]
 name = "apple-bloom"
-version = "0.1.6"
+version = "0.1.7"
 authors = ["softprops <d.tangren@gmail.com>", "Hanif Bin Ariffin <hanif.ariffin.4326@gmail.com>"]
 description = "Rust bindings for openapi schemas"
 homepage = "https://github.com/hbina/apple-bloom"

@@ -344,7 +344,7 @@ pub struct Operation {
     pub extensions: Extensions,
 }
 
-// https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#securityRequirementObject
+// https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#security-requirement-object
 pub type SecurityRequirement = BTreeMap<String, Vec<String>>;
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]

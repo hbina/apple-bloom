@@ -328,14 +328,13 @@ pub struct Operation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub deprecated: Option<bool>,
 
-    // FIXME: Implement
     // /// A declaration of which security mechanisms can be used for this operation. The list of
     // /// values includes alternative security requirement objects that can be used. Only one
     // /// of the security requirement objects need to be satisfied to authorize a request.
     // /// This definition overrides any declared top-level
     // /// [`security`](https://github.com/OAI/OpenAPI-Specification/blob/aa91a19c43f8a12c02efa42d64794e396473f3b1/versions/3.0.1.md#oasSecurity).
     // /// To remove a top-level security declaration, an empty array can be used.
-    // pub security: Option<SecurityRequirement>,
+    pub security: Option<Vec<SecurityRequirement>>,
     /// An alternative `server` array to service this operation. If an alternative `server`
     /// object is specified at the Path Item Object or Root level, it will be overridden by
     /// this value.
@@ -344,6 +343,9 @@ pub struct Operation {
     #[serde(flatten)]
     pub extensions: Extensions,
 }
+
+// https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#securityRequirementObject
+pub type SecurityRequirement = BTreeMap<String, Vec<String>>;
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]
 pub enum ParameterLocation {
@@ -980,7 +982,7 @@ pub struct ClientCredentialsFlow {
 #[serde(rename_all = "camelCase")]
 pub struct AuthorizationCodeFlow {
     pub authorization_url: Url,
-    token_url: Url,
+    pub token_url: Url,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub refresh_url: Option<Url>,
     pub scopes: BTreeMap<String, String>,

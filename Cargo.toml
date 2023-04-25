@@ -1,6 +1,6 @@
 [package]
 name = "apple-bloom"
-version = "0.1.8"
+version = "0.1.9"
 authors = ["softprops <d.tangren@gmail.com>", "Hanif Bin Ariffin <hanif.ariffin.4326@gmail.com>"]
 description = "Rust bindings for openapi schemas"
 homepage = "https://github.com/hbina/apple-bloom"
@@ -10,11 +10,10 @@ license = "MIT"
 edition = "2021"
 
 [dependencies]
-failure = "0.1.8"
 semver = "1.0.9"
 serde = { version = "1.0.137", features = ["derive"] }
 serde_json = "1.0.81"
-serde_yaml = "0.8.24"
+serde_yaml = "0.9.21"
 thiserror = "1.0.31"
 url = { version = "2.2.2", features = ["serde"] }
 
